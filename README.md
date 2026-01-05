@@ -25,12 +25,29 @@ Install deps (from repo root):
 python -m pip install -e apps/backend
 ```
 
+Run database migrations (create tables):
+
+```bash
+cd apps/backend
+python -m alembic upgrade head
+```
+
 Start the API (run from `apps/backend` so imports resolve cleanly):
 
 ```bash
 cd apps/backend
 python -m uvicorn app.main:app --reload --host 127.0.0.1 --port 8000
 ```
+
+If port **8000** fails on Windows (often because something else is already listening), free it or switch ports:
+
+```powershell
+netstat -ano | findstr ":8000"
+# then stop the PID you see:
+Stop-Process -Id <PID> -Force
+```
+
+Or run the API on another port (e.g. 8001) and update `NEXT_PUBLIC_API_BASE_URL` accordingly.
 
 OpenAPI docs:
 - `http://127.0.0.1:8000/docs`
