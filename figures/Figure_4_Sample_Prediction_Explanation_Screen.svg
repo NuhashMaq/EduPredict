@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="900" viewBox="0 0 1400 900">
+  <defs>
+    <style>
+      .title { font: 700 28px 'Segoe UI', Arial, sans-serif; fill: #0f172a; }
+      .subtitle { font: 500 16px 'Segoe UI', Arial, sans-serif; fill: #334155; }
+      .appBg { fill: #f8fafc; }
+      .panel { fill: #ffffff; stroke: #0f172a; stroke-width: 2.0; rx: 18; }
+      .panelSoft { fill: #ffffff; stroke: #cbd5e1; stroke-width: 1.6; rx: 18; }
+      .h1 { font: 800 20px 'Segoe UI', Arial, sans-serif; fill: #0f172a; }
+      .h2 { font: 700 16px 'Segoe UI', Arial, sans-serif; fill: #0f172a; }
+      .text { font: 500 14px 'Segoe UI', Arial, sans-serif; fill: #334155; }
+      .small { font: 500 12.5px 'Segoe UI', Arial, sans-serif; fill: #475569; }
+      .input { fill: #f8fafc; stroke: #94a3b8; stroke-width: 1.4; rx: 10; }
+      .btn { fill: #0f172a; rx: 12; }
+      .btnText { font: 700 14px 'Segoe UI', Arial, sans-serif; fill: #ffffff; }
+      .pillRisk { fill: #fee2e2; stroke: #ef4444; stroke-width: 1.4; rx: 999; }
+      .pillOk { fill: #dcfce7; stroke: #22c55e; stroke-width: 1.4; rx: 999; }
+      .pillText { font: 800 13px 'Segoe UI', Arial, sans-serif; }
+      .barBg { fill: #e2e8f0; rx: 8; }
+      .barFill { fill: #ef4444; rx: 8; }
+      .barFillOk { fill: #22c55e; rx: 8; }
+      .rowLine { stroke: #e2e8f0; stroke-width: 1.2; }
+    </style>
+  </defs>
+
+  <rect x="0" y="0" width="1400" height="900" class="appBg" />
+
+  <text x="70" y="70" class="title">Figure 4: Sample Prediction + Explanation Output Screen (Mock)</text>
+  <text x="70" y="102" class="subtitle">Illustrative UI layout showing inputs, prediction result, and SHAP-based explanation factors</text>
+
+  <!-- App frame -->
+  <rect x="70" y="140" width="1260" height="700" class="panel" />
+
+  <!-- Top bar -->
+  <rect x="90" y="160" width="1220" height="70" class="panelSoft" />
+  <text x="120" y="205" class="h1">EduPredict Dashboard</text>
+  <text x="120" y="226" class="small">Role: Teacher/Admin • Endpoint: /ml/predict + /ml/explain</text>
+
+  <rect x="1050" y="180" width="240" height="36" class="panelSoft" />
+  <text x="1065" y="203" class="small">Model Version: 20260110_120000_000001Z</text>
+
+  <!-- Left panel: Inputs -->
+  <rect x="90" y="250" width="520" height="560" class="panelSoft" />
+  <text x="120" y="288" class="h2">Input Features</text>
+  <text x="120" y="312" class="small">(Example values; students are not allowed to submit arbitrary features.)</text>
+
+  <!-- Inputs -->
+  <text x="120" y="355" class="text">Attendance (%)</text>
+  <rect x="300" y="338" width="270" height="34" class="input" />
+  <text x="316" y="360" class="small">72</text>
+
+  <text x="120" y="405" class="text">Assignments (%)</text>
+  <rect x="300" y="388" width="270" height="34" class="input" />
+  <text x="316" y="410" class="small">65</text>
+
+  <text x="120" y="455" class="text">Quizzes (%)</text>
+  <rect x="300" y="438" width="270" height="34" class="input" />
+  <text x="316" y="460" class="small">58</text>
+
+  <text x="120" y="505" class="text">Exams (%)</text>
+  <rect x="300" y="488" width="270" height="34" class="input" />
+  <text x="316" y="510" class="small">54</text>
+
+  <text x="120" y="555" class="text">GPA (0.0–4.0)</text>
+  <rect x="300" y="538" width="270" height="34" class="input" />
+  <text x="316" y="560" class="small">2.45</text>
+
+  <text x="120" y="610" class="text">Threshold</text>
+  <rect x="300" y="593" width="270" height="34" class="input" />
+  <text x="316" y="615" class="small">0.60</text>
+
+  <!-- Buttons -->
+  <rect x="120" y="665" width="210" height="42" class="btn" />
+  <text x="150" y="692" class="btnText">Predict Risk</text>
+
+  <rect x="350" y="665" width="220" height="42" class="btn" />
+  <text x="380" y="692" class="btnText">Explain Prediction</text>
+
+  <text x="120" y="740" class="small">Note: This is a mock screen for documentation purposes.</text>
+
+  <!-- Right panel: Outputs -->
+  <rect x="630" y="250" width="680" height="560" class="panelSoft" />
+  <text x="660" y="288" class="h2">Prediction Result</text>
+
+  <!-- Risk pill -->
+  <rect x="660" y="310" width="150" height="30" class="pillRisk" />
+  <text x="690" y="330" class="pillText" fill="#991b1b">At-Risk</text>
+
+  <text x="830" y="330" class="text">Risk Probability:</text>
+  <text x="960" y="330" class="h2">0.73</text>
+
+  <!-- Probability bar -->
+  <rect x="660" y="355" width="620" height="18" class="barBg" />
+  <rect x="660" y="355" width="453" height="18" class="barFill" />
+  <text x="660" y="402" class="small">Confidence = max(p, 1-p) → 0.73</text>
+
+  <!-- Explanation -->
+  <text x="660" y="455" class="h2">Top Contributing Factors (SHAP)</text>
+  <text x="660" y="478" class="small">Positive impact increases risk; negative impact decreases risk.</text>
+
+  <!-- Table header -->
+  <rect x="660" y="500" width="620" height="36" class="input" />
+  <text x="680" y="523" class="small">Feature</text>
+  <text x="930" y="523" class="small">Value</text>
+  <text x="1040" y="523" class="small">Impact</text>
+  <text x="1150" y="523" class="small">Direction</text>
+
+  <!-- Rows -->
+  <line x1="660" y1="545" x2="1280" y2="545" class="rowLine" />
+  <text x="680" y="568" class="text">exams_pct</text>
+  <text x="930" y="568" class="text">54</text>
+  <text x="1040" y="568" class="text">+0.21</text>
+  <text x="1150" y="568" class="small">increases_risk</text>
+
+  <line x1="660" y1="585" x2="1280" y2="585" class="rowLine" />
+  <text x="680" y="608" class="text">quizzes_pct</text>
+  <text x="930" y="608" class="text">58</text>
+  <text x="1040" y="608" class="text">+0.16</text>
+  <text x="1150" y="608" class="small">increases_risk</text>
+
+  <line x1="660" y1="625" x2="1280" y2="625" class="rowLine" />
+  <text x="680" y="648" class="text">gpa</text>
+  <text x="930" y="648" class="text">2.45</text>
+  <text x="1040" y="648" class="text">+0.12</text>
+  <text x="1150" y="648" class="small">increases_risk</text>
+
+  <line x1="660" y1="665" x2="1280" y2="665" class="rowLine" />
+  <text x="680" y="688" class="text">attendance_pct</text>
+  <text x="930" y="688" class="text">72</text>
+  <text x="1040" y="688" class="text">-0.08</text>
+  <text x="1150" y="688" class="small">decreases_risk</text>
+
+  <line x1="660" y1="705" x2="1280" y2="705" class="rowLine" />
+  <text x="680" y="728" class="text">assignments_pct</text>
+  <text x="930" y="728" class="text">65</text>
+  <text x="1040" y="728" class="text">-0.04</text>
+  <text x="1150" y="728" class="small">decreases_risk</text>
+
+  <text x="660" y="780" class="small">These factor values are illustrative; actual output is produced by /ml/explain.</text>
+</svg>

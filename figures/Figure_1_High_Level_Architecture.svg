@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1400" height="800" viewBox="0 0 1400 800">
+  <defs>
+    <style>
+      .title { font: 700 28px 'Segoe UI', Arial, sans-serif; fill: #0f172a; }
+      .subtitle { font: 500 16px 'Segoe UI', Arial, sans-serif; fill: #334155; }
+      .box { fill: #ffffff; stroke: #0f172a; stroke-width: 2.2; rx: 16; }
+      .box2 { fill: #f8fafc; stroke: #0f172a; stroke-width: 2.2; rx: 16; }
+      .label { font: 700 18px 'Segoe UI', Arial, sans-serif; fill: #0f172a; }
+      .text { font: 500 15px 'Segoe UI', Arial, sans-serif; fill: #334155; }
+      .small { font: 500 13px 'Segoe UI', Arial, sans-serif; fill: #475569; }
+      .arrow { stroke: #0f172a; stroke-width: 2.4; fill: none; marker-end: url(#arrowHead); }
+      .arrow2 { stroke: #334155; stroke-width: 2.2; fill: none; marker-end: url(#arrowHeadGray); stroke-dasharray: 6 6; }
+      .badge { fill: #e2e8f0; stroke: #334155; stroke-width: 1.5; rx: 10; }
+    </style>
+
+    <marker id="arrowHead" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M 0 0 L 12 6 L 0 12 z" fill="#0f172a" />
+    </marker>
+    <marker id="arrowHeadGray" markerWidth="12" markerHeight="12" refX="10" refY="6" orient="auto">
+      <path d="M 0 0 L 12 6 L 0 12 z" fill="#334155" />
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect x="0" y="0" width="1400" height="800" fill="#ffffff" />
+
+  <!-- Title -->
+  <text x="70" y="70" class="title">Figure 1: High-Level Architecture Diagram — EduPredict</text>
+  <text x="70" y="102" class="subtitle">Next.js Frontend ↔ FastAPI Backend ↔ Database + Model Registry (ML artifacts)</text>
+
+  <!-- Frontend box -->
+  <rect x="90" y="210" width="360" height="300" class="box" />
+  <text x="120" y="255" class="label">Frontend (UI)</text>
+  <text x="120" y="285" class="text">Next.js (App Router) + TypeScript</text>
+  <text x="120" y="310" class="text">Tailwind CSS + UI components</text>
+
+  <rect x="120" y="340" width="300" height="42" class="badge" />
+  <text x="135" y="367" class="small">Uses: NEXT_PUBLIC_API_BASE_URL</text>
+
+  <text x="120" y="410" class="text">Role-based screens:</text>
+  <text x="140" y="438" class="small">• Admin (user + model management)</text>
+  <text x="140" y="460" class="small">• Teacher (academic records + ML)</text>
+  <text x="140" y="482" class="small">• Student (self records + self ML)</text>
+
+  <!-- Backend box -->
+  <rect x="520" y="190" width="430" height="340" class="box" />
+  <text x="550" y="235" class="label">Backend (API)</text>
+  <text x="550" y="265" class="text">FastAPI (async) + OpenAPI docs</text>
+  <text x="550" y="292" class="text">JWT Auth + Refresh Tokens + RBAC</text>
+  <text x="550" y="319" class="text">Routers: auth, admin, academics, ml, health</text>
+
+  <rect x="550" y="350" width="370" height="150" class="box2" />
+  <text x="570" y="382" class="label" style="font-size:16px;">Core ML APIs</text>
+  <text x="570" y="412" class="small">POST /ml/predict</text>
+  <text x="570" y="435" class="small">POST /ml/explain (SHAP factors)</text>
+  <text x="570" y="458" class="small">POST /ml/train (admin-only)</text>
+  <text x="570" y="481" class="small">GET /ml/models, POST /ml/models/{v}/promote</text>
+
+  <!-- Database box -->
+  <rect x="1010" y="165" width="320" height="260" class="box" />
+  <text x="1040" y="210" class="label">Database</text>
+  <text x="1040" y="240" class="text">SQLite (default) / Postgres (Docker)</text>
+  <text x="1040" y="275" class="small">Tables:</text>
+  <text x="1060" y="302" class="small">• users</text>
+  <text x="1060" y="324" class="small">• refresh_tokens</text>
+  <text x="1060" y="346" class="small">• academic_records</text>
+  <text x="1040" y="382" class="small">Migrations: Alembic</text>
+
+  <!-- Model registry box -->
+  <rect x="1010" y="470" width="320" height="240" class="box" />
+  <text x="1040" y="515" class="label">Model Registry</text>
+  <text x="1040" y="545" class="text">File-based versioned artifacts</text>
+  <text x="1040" y="575" class="small">ml_registry/</text>
+  <text x="1060" y="602" class="small">• LATEST</text>
+  <text x="1060" y="624" class="small">• models/&lt;version&gt;/model.joblib</text>
+  <text x="1060" y="646" class="small">• models/&lt;version&gt;/metadata.json</text>
+  <text x="1040" y="680" class="small">Promote = update LATEST pointer</text>
+
+  <!-- Arrows: UI -> API -->
+  <path class="arrow" d="M 450 340 C 495 340, 490 340, 520 340" />
+  <text x="465" y="322" class="small">HTTPS (JSON)</text>
+  <rect x="460" y="350" width="160" height="30" class="badge" />
+  <text x="472" y="371" class="small">Authorization: Bearer JWT</text>
+
+  <!-- Arrows: API -> DB -->
+  <path class="arrow" d="M 950 300 C 980 300, 980 300, 1010 300" />
+  <text x="960" y="285" class="small">SQLAlchemy (async)</text>
+
+  <!-- Arrows: API -> Registry -->
+  <path class="arrow" d="M 950 470 C 980 470, 980 560, 1010 560" />
+  <text x="930" y="530" class="small">Load latest model</text>
+
+  <!-- Dashed: Train writes to registry -->
+  <path class="arrow2" d="M 760 500 C 820 600, 900 650, 1010 650" />
+  <text x="785" y="618" class="small">/ml/train saves artifacts + metadata</text>
+
+  <!-- Footer note -->
+  <text x="70" y="760" class="small">Note: Students cannot submit arbitrary feature vectors to predict/explain; feature-based ML requests are restricted to Teacher/Admin.</text>
+</svg>
