@@ -4,7 +4,7 @@ from fastapi.middleware.gzip import GZipMiddleware
 from starlette.middleware.trustedhost import TrustedHostMiddleware
 
 from app.core.settings import get_settings
-from app.routers import academics, admin, auth, bootstrap, health, ml, users
+from app.routers import academics, admin, auth, bootstrap, health, users
 
 
 def create_app() -> FastAPI:
@@ -43,7 +43,11 @@ def create_app() -> FastAPI:
     app.include_router(admin.router)
     app.include_router(bootstrap.router)
     app.include_router(academics.router)
-    app.include_router(ml.router)
+    if settings.enable_ml_endpoints:
+        # Lazy import keeps Vercel/serverless deployments lightweight when ML is disabled.
+        from app.routers import ml
+
+        app.include_router(ml.router)
     app.include_router(health.router)
 
     return app

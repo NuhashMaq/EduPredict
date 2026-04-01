@@ -33,6 +33,7 @@ class Settings(BaseSettings):
     app_env: Literal["development", "staging", "production"] = "development"
     app_debug: bool = False
     app_log_level: Literal["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"] = "INFO"
+    enable_ml_endpoints: bool = True
     allowed_hosts: list[str] | str = ["localhost", "127.0.0.1"]
 
     # NOTE: pydantic-settings attempts to JSON-parse env values for complex types like list[str].
