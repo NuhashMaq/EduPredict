@@ -1,0 +1,108 @@
+%% Creator: Inkscape 1.4.3 (0d15f75, 2025-12-25), www.inkscape.org
+%% PDF/EPS/PS + LaTeX output extension by Johan Engelen, 2010
+%% Accompanies image file 'Figure_1_High_Level_Architecture_svg-tex.pdf' (pdf, eps, ps)
+%%
+%% To include the image in your LaTeX document, write
+%%   \input{<filename>.pdf_tex}
+%%  instead of
+%%   \includegraphics{<filename>.pdf}
+%% To scale the image, write
+%%   \def\svgwidth{<desired width>}
+%%   \input{<filename>.pdf_tex}
+%%  instead of
+%%   \includegraphics[width=<desired width>]{<filename>.pdf}
+%%
+%% Images with a different path to the parent latex file can
+%% be accessed with the `import' package (which may need to be
+%% installed) using
+%%   \usepackage{import}
+%% in the preamble, and then including the image with
+%%   \import{<path to file>}{<filename>.pdf_tex}
+%% Alternatively, one can specify
+%%   \graphicspath{{<path to file>/}}
+%% 
+%% For more information, please see info/svg-inkscape on CTAN:
+%%   http://tug.ctan.org/tex-archive/info/svg-inkscape
+%%
+\begingroup%
+  \makeatletter%
+  \providecommand\color[2][]{%
+    \errmessage{(Inkscape) Color is used for the text in Inkscape, but the package 'color.sty' is not loaded}%
+    \renewcommand\color[2][]{}%
+  }%
+  \providecommand\transparent[1]{%
+    \errmessage{(Inkscape) Transparency is used (non-zero) for the text in Inkscape, but the package 'transparent.sty' is not loaded}%
+    \renewcommand\transparent[1]{}%
+  }%
+  \providecommand\rotatebox[2]{#2}%
+  \newcommand*\fsize{\dimexpr\f@size pt\relax}%
+  \newcommand*\lineheight[1]{\fontsize{\fsize}{#1\fsize}\selectfont}%
+  \ifx\svgwidth\undefined%
+    \setlength{\unitlength}{1050bp}%
+    \ifx\svgscale\undefined%
+      \relax%
+    \else%
+      \setlength{\unitlength}{\unitlength * \real{\svgscale}}%
+    \fi%
+  \else%
+    \setlength{\unitlength}{\svgwidth}%
+  \fi%
+  \global\let\svgwidth\undefined%
+  \global\let\svgscale\undefined%
+  \makeatother%
+  \begin{picture}(1,0.57142857)%
+    \lineheight{1}%
+    \setlength\tabcolsep{0pt}%
+    \put(0,0){\includegraphics[width=\unitlength,page=1]{Figure_1_High_Level_Architecture_svg-tex.pdf}}%
+    \put(0.05,0.52142857){\color[rgb]{0.05882353,0.09019608,0.16470588}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}\textbf{Figure 1: High-Level Architecture Diagram — EduPredict}\end{tabular}}}}%
+    \put(0.05,0.49857143){\color[rgb]{0.2,0.25490196,0.33333333}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}\textbf{Next.js Frontend ↔ FastAPI Backend ↔ Database + Model Registry (ML artifacts)}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=2]{Figure_1_High_Level_Architecture_svg-tex.pdf}}%
+    \put(0.08571429,0.38928571){\color[rgb]{0.05882353,0.09019608,0.16470588}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}\textbf{Frontend (UI)}\end{tabular}}}}%
+    \put(0.08571429,0.36785714){\color[rgb]{0.2,0.25490196,0.33333333}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}\textbf{Next.js (App Router) + TypeScript}\end{tabular}}}}%
+    \put(0.08571429,0.35){\color[rgb]{0.2,0.25490196,0.33333333}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}\textbf{Tailwind CSS + UI components}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=3]{Figure_1_High_Level_Architecture_svg-tex.pdf}}%
+    \put(0.09642857,0.30928571){\color[rgb]{0.27843137,0.33333333,0.41176471}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}\textbf{Uses: NEXT_PUBLIC_API_BASE_URL}\end{tabular}}}}%
+    \put(0.08571429,0.27857143){\color[rgb]{0.2,0.25490196,0.33333333}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}\textbf{Role-based screens:}\end{tabular}}}}%
+    \put(0.1,0.25857143){\color[rgb]{0.27843137,0.33333333,0.41176471}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}\textbf{• Admin (user + model management)}\end{tabular}}}}%
+    \put(0.1,0.24285714){\color[rgb]{0.27843137,0.33333333,0.41176471}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}\textbf{• Teacher (academic records + ML)}\end{tabular}}}}%
+    \put(0.1,0.22714286){\color[rgb]{0.27843137,0.33333333,0.41176471}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}\textbf{• Student (self records + self ML)}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=4]{Figure_1_High_Level_Architecture_svg-tex.pdf}}%
+    \put(0.39285714,0.40357143){\color[rgb]{0.05882353,0.09019608,0.16470588}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}\textbf{Backend (API)}\end{tabular}}}}%
+    \put(0.39285714,0.38214286){\color[rgb]{0.2,0.25490196,0.33333333}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}\textbf{FastAPI (async) + OpenAPI docs}\end{tabular}}}}%
+    \put(0.39285714,0.36285714){\color[rgb]{0.2,0.25490196,0.33333333}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}\textbf{JWT Auth + Refresh Tokens + RBAC}\end{tabular}}}}%
+    \put(0.39285714,0.34357143){\color[rgb]{0.2,0.25490196,0.33333333}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}\textbf{Routers: auth, admin, academics, ml, health}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=5]{Figure_1_High_Level_Architecture_svg-tex.pdf}}%
+    \put(0.40714286,0.29857143){\color[rgb]{0.05882353,0.09019608,0.16470588}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}\textbf{Core ML APIs}\end{tabular}}}}%
+    \put(0.40714286,0.27714286){\color[rgb]{0.27843137,0.33333333,0.41176471}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}\textbf{POST /ml/predict}\end{tabular}}}}%
+    \put(0.40714286,0.26071429){\color[rgb]{0.27843137,0.33333333,0.41176471}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}\textbf{POST /ml/explain (SHAP factors)}\end{tabular}}}}%
+    \put(0.40714286,0.24428571){\color[rgb]{0.27843137,0.33333333,0.41176471}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}\textbf{POST /ml/train (admin-only)}\end{tabular}}}}%
+    \put(0.40714286,0.22785714){\color[rgb]{0.27843137,0.33333333,0.41176471}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}\textbf{GET /ml/models, POST /ml/models/{v}/promote}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=6]{Figure_1_High_Level_Architecture_svg-tex.pdf}}%
+    \put(0.74285714,0.42142857){\color[rgb]{0.05882353,0.09019608,0.16470588}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}\textbf{Database}\end{tabular}}}}%
+    \put(0.74285714,0.4){\color[rgb]{0.2,0.25490196,0.33333333}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}\textbf{SQLite (default) / Postgres (Docker)}\end{tabular}}}}%
+    \put(0.74285714,0.375){\color[rgb]{0.27843137,0.33333333,0.41176471}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}\textbf{Tables:}\end{tabular}}}}%
+    \put(0.75714286,0.35571429){\color[rgb]{0.27843137,0.33333333,0.41176471}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}\textbf{• users}\end{tabular}}}}%
+    \put(0.75714286,0.34){\color[rgb]{0.27843137,0.33333333,0.41176471}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}\textbf{• refresh_tokens}\end{tabular}}}}%
+    \put(0.75714286,0.32428571){\color[rgb]{0.27843137,0.33333333,0.41176471}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}\textbf{• academic_records}\end{tabular}}}}%
+    \put(0.74285714,0.29857143){\color[rgb]{0.27843137,0.33333333,0.41176471}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}\textbf{Migrations: Alembic}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=7]{Figure_1_High_Level_Architecture_svg-tex.pdf}}%
+    \put(0.74285714,0.20357143){\color[rgb]{0.05882353,0.09019608,0.16470588}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}\textbf{Model Registry}\end{tabular}}}}%
+    \put(0.74285714,0.18214286){\color[rgb]{0.2,0.25490196,0.33333333}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}\textbf{File-based versioned artifacts}\end{tabular}}}}%
+    \put(0.74285714,0.16071429){\color[rgb]{0.27843137,0.33333333,0.41176471}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}\textbf{ml_registry/}\end{tabular}}}}%
+    \put(0.75714286,0.14142857){\color[rgb]{0.27843137,0.33333333,0.41176471}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}\textbf{• LATEST}\end{tabular}}}}%
+    \put(0.75714286,0.12571429){\color[rgb]{0.27843137,0.33333333,0.41176471}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}\textbf{• models/<version>/model.joblib}\end{tabular}}}}%
+    \put(0.75714286,0.11){\color[rgb]{0.27843137,0.33333333,0.41176471}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}\textbf{• models/<version>/metadata.json}\end{tabular}}}}%
+    \put(0.74285714,0.08571429){\color[rgb]{0.27843137,0.33333333,0.41176471}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}\textbf{Promote = update LATEST pointer}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=8]{Figure_1_High_Level_Architecture_svg-tex.pdf}}%
+    \put(0.33214286,0.34142857){\color[rgb]{0.27843137,0.33333333,0.41176471}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}\textbf{HTTPS (JSON)}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=9]{Figure_1_High_Level_Architecture_svg-tex.pdf}}%
+    \put(0.33714286,0.30642857){\color[rgb]{0.27843137,0.33333333,0.41176471}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}\textbf{Authorization: Bearer JWT}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=10]{Figure_1_High_Level_Architecture_svg-tex.pdf}}%
+    \put(0.68571429,0.36785714){\color[rgb]{0.27843137,0.33333333,0.41176471}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}\textbf{SQLAlchemy (async)}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=11]{Figure_1_High_Level_Architecture_svg-tex.pdf}}%
+    \put(0.66428571,0.19285714){\color[rgb]{0.27843137,0.33333333,0.41176471}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}\textbf{Load latest model}\end{tabular}}}}%
+    \put(0,0){\includegraphics[width=\unitlength,page=12]{Figure_1_High_Level_Architecture_svg-tex.pdf}}%
+    \put(0.56071429,0.13){\color[rgb]{0.27843137,0.33333333,0.41176471}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}\textbf{/ml/train saves artifacts + metadata}\end{tabular}}}}%
+    \put(0.05,0.02857143){\color[rgb]{0.27843137,0.33333333,0.41176471}\makebox(0,0)[lt]{\lineheight{0}\smash{\begin{tabular}[t]{l}\textbf{Note: Students cannot submit arbitrary feature vectors to predict/explain; feature-based ML requests are restricted to Teacher/Admin.}\end{tabular}}}}%
+  \end{picture}%
+\endgroup%
