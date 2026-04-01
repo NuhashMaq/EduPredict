@@ -14,6 +14,7 @@ export default function AdminUsersPage() {
 
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
+  const [notice, setNotice] = React.useState<string | null>(null);
   const [data, setData] = React.useState<UsersList | null>(null);
 
   const [q, setQ] = React.useState<string>("");
@@ -30,9 +31,54 @@ export default function AdminUsersPage() {
   }>({ email: "", full_name: "", role: "student", password: "" });
 
   const [savingIds, setSavingIds] = React.useState<Record<string, boolean>>({});
+  const [deletingIds, setDeletingIds] = React.useState<Record<string, boolean>>({});
+
+  const [importingStudents, setImportingStudents] = React.useState(false);
+  const importStudentsInputRef = React.useRef<HTMLInputElement | null>(null);
+  const [importUpdateExisting, setImportUpdateExisting] = React.useState(true);
+
+  const [selectedUserIds, setSelectedUserIds] = React.useState<Set<string>>(() => new Set());
+
+  const visibleUserIds = React.useMemo(() => (data?.items ?? []).map((u) => u.id), [data?.items]);
+  const allVisibleSelected = React.useMemo(() => {
+    if (!visibleUserIds.length) return false;
+    for (const id of visibleUserIds) {
+      if (!selectedUserIds.has(id)) return false;
+    }
+    return true;
+  }, [selectedUserIds, visibleUserIds]);
+
+  const someVisibleSelected = React.useMemo(() => {
+    if (!visibleUserIds.length) return false;
+    let count = 0;
+    for (const id of visibleUserIds) {
+      if (selectedUserIds.has(id)) count += 1;
+    }
+    return count > 0 && count < visibleUserIds.length;
+  }, [selectedUserIds, visibleUserIds]);
+
+  const selectAllRef = React.useRef<HTMLInputElement | null>(null);
+
+  React.useEffect(() => {
+    // Keep "select all" checkbox indeterminate state in sync.
+    if (!selectAllRef.current) return;
+    selectAllRef.current.indeterminate = someVisibleSelected;
+  }, [someVisibleSelected]);
+
+  React.useEffect(() => {
+    // If list changes (filters/pagination), drop selections that are no longer visible.
+    if (!selectedUserIds.size) return;
+    const visible = new Set(visibleUserIds);
+    const next = new Set<string>();
+    for (const id of selectedUserIds) {
+      if (visible.has(id)) next.add(id);
+    }
+    if (next.size !== selectedUserIds.size) setSelectedUserIds(next);
+  }, [selectedUserIds, visibleUserIds]);
 
   async function load(nextOffset = offset) {
     setError(null);
+    setNotice(null);
     setLoading(true);
     try {
       const qs = new URLSearchParams({
@@ -46,6 +92,7 @@ export default function AdminUsersPage() {
       const res = await apiFetchWithRefresh<UsersList>(`/admin/users?${qs.toString()}`);
       setData(res);
       setOffset(nextOffset);
+      setSelectedUserIds(new Set());
     } catch (e) {
       setError(e instanceof Error ? e.message : "Failed to load users");
     } finally {
@@ -93,6 +140,7 @@ export default function AdminUsersPage() {
 
   async function createUser() {
     setError(null);
+    setNotice(null);
     const email = createForm.email.trim();
 
     if (!email) {
@@ -126,6 +174,139 @@ export default function AdminUsersPage() {
     }
   }
 
+  async function deleteSelectedUsers() {
+    if (role !== "admin") {
+      setError("Only admins can delete users.");
+      return;
+    }
+
+    const ids = Array.from(selectedUserIds);
+    if (!ids.length) return;
+
+    const emailById = new Map((data?.items ?? []).map((u) => [u.id, u.email] as const));
+    const selectedEmails = ids.map((id) => emailById.get(id) ?? id);
+    const preview = selectedEmails.slice(0, 4).join(", ") + (selectedEmails.length > 4 ? "…" : "");
+
+    const ok = window.confirm(
+      `Delete ${ids.length} selected user(s)? This cannot be undone.` + (preview ? `\n\nSelected: ${preview}` : "")
+    );
+    if (!ok) return;
+
+    setError(null);
+    setNotice(null);
+    setDeletingIds((s) => {
+      const next = { ...s };
+      for (const id of ids) next[id] = true;
+      return next;
+    });
+
+    const results = await Promise.allSettled(
+      ids.map((id) => apiFetchWithRefresh<void>(`/admin/users/${id}`, { method: "DELETE" }))
+    );
+
+    const deletedIds: string[] = [];
+    const failures: string[] = [];
+    results.forEach((r, i) => {
+      if (r.status === "fulfilled") {
+        deletedIds.push(ids[i]);
+      } else {
+        const who = emailById.get(ids[i]) ?? ids[i];
+        const msg = r.reason instanceof Error ? r.reason.message : "Failed";
+        failures.push(`${who}: ${msg}`);
+      }
+    });
+
+    if (deletedIds.length) {
+      setData((prev) => {
+        if (!prev) return prev;
+        const deleted = new Set(deletedIds);
+        return {
+          ...prev,
+          total: Math.max(0, prev.total - deletedIds.length),
+          items: prev.items.filter((u) => !deleted.has(u.id))
+        };
+      });
+      setSelectedUserIds((prev) => {
+        const next = new Set(prev);
+        for (const id of deletedIds) next.delete(id);
+        return next;
+      });
+    }
+
+    setDeletingIds((s) => {
+      const next = { ...s };
+      for (const id of ids) delete next[id];
+      return next;
+    });
+
+    if (failures.length) {
+      setError(`Failed to delete ${failures.length} user(s). ${failures[0]}`);
+    } else {
+      setNotice(`Deleted ${deletedIds.length} user(s).`);
+    }
+  }
+
+  type ImportStudentsResponse = {
+    created: number;
+    updated_existing?: number;
+    skipped_existing: number;
+    invalid_rows: number;
+    errors?: Array<{ row: number; message: string }>;
+  };
+
+  async function importStudentsCsv(file: File) {
+    if (role !== "admin") return;
+    setError(null);
+    setNotice(null);
+    setImportingStudents(true);
+    try {
+      const fd = new FormData();
+      fd.append("file", file);
+      fd.append("update_existing", String(importUpdateExisting));
+
+      const res = await apiFetchWithRefresh<ImportStudentsResponse>("/admin/users/import-students", {
+        method: "POST",
+        body: fd
+      });
+
+      const updated = res.updated_existing ?? 0;
+      const base = `Imported students: created=${res.created}, updated=${updated}, skipped=${res.skipped_existing}, invalid=${res.invalid_rows}`;
+      if (res.errors?.length) {
+        setError(`${base}. First error (row ${res.errors[0].row}): ${res.errors[0].message}`);
+      } else {
+        setNotice(base);
+      }
+
+      await load(0);
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Failed to import students");
+    } finally {
+      setImportingStudents(false);
+      if (importStudentsInputRef.current) importStudentsInputRef.current.value = "";
+    }
+  }
+
+  function toggleRowSelected(userId: string) {
+    setSelectedUserIds((prev) => {
+      const next = new Set(prev);
+      if (next.has(userId)) next.delete(userId);
+      else next.add(userId);
+      return next;
+    });
+  }
+
+  function toggleSelectAllVisible() {
+    setSelectedUserIds((prev) => {
+      const next = new Set(prev);
+      if (allVisibleSelected) {
+        for (const id of visibleUserIds) next.delete(id);
+      } else {
+        for (const id of visibleUserIds) next.add(id);
+      }
+      return next;
+    });
+  }
+
   if (role !== "admin") {
     return (
       <div className="rounded-2xl border border-rose-300 bg-rose-50 p-4 text-sm text-rose-700">
@@ -150,6 +331,15 @@ export default function AdminUsersPage() {
         {error ? (
           <div data-gsap="pop" className="rounded-xl border border-rose-300 bg-rose-50 p-4 text-base text-rose-700">
             {error}
+          </div>
+        ) : null}
+
+        {notice ? (
+          <div
+            data-gsap="pop"
+            className="rounded-xl border border-emerald-300 bg-emerald-50 p-4 text-base text-emerald-800"
+          >
+            {notice}
           </div>
         ) : null}
 
@@ -220,6 +410,38 @@ export default function AdminUsersPage() {
                 <HoverBorderGradient variant="orange" onClick={createUser} disabled={creating}>
                   {creating ? "Creating…" : "Create user"}
                 </HoverBorderGradient>
+
+                <input
+                  ref={importStudentsInputRef}
+                  type="file"
+                  accept=".csv,text/csv"
+                  className="hidden"
+                  onChange={(e) => {
+                    const f = e.currentTarget.files?.[0];
+                    if (f) void importStudentsCsv(f);
+                  }}
+                />
+                <HoverBorderGradient
+                  variant="blue"
+                  onClick={() => importStudentsInputRef.current?.click()}
+                  disabled={importingStudents || creating || loading}
+                >
+                  {importingStudents ? "Importing…" : "Import students CSV"}
+                </HoverBorderGradient>
+              </div>
+
+              <label className="mt-1 flex items-center gap-2 text-sm text-slate-700">
+                <input
+                  type="checkbox"
+                  checked={importUpdateExisting}
+                  onChange={(e) => setImportUpdateExisting(e.target.checked)}
+                  className="h-4 w-4 rounded border border-slate-300 bg-white accent-(--edp-blue)"
+                />
+                Update passwords for existing student emails
+              </label>
+
+              <div className="text-sm text-slate-700">
+                CSV headers required: <span className="font-semibold">email, password</span> (optional: full_name).
               </div>
             </div>
           </GlassCard>
@@ -295,15 +517,43 @@ export default function AdminUsersPage() {
                   Showing {(data?.items?.length ?? 0)} of {data?.total ?? 0}
                 </div>
               </div>
+
             </div>
           </GlassCard>
         </div>
+
+        {selectedUserIds.size ? (
+          <div data-gsap="pop" className="flex justify-end">
+            <HoverBorderGradient
+              variant="orange"
+              onClick={deleteSelectedUsers}
+              disabled={loading || Object.keys(deletingIds).length > 0}
+              className={
+                "border border-[#B30000] bg-[#B30000] text-white ring-1 ring-[rgba(179,0,0,0.30)] hover:bg-[#9A0000]"
+              }
+            >
+              Delete selected ({selectedUserIds.size})
+            </HoverBorderGradient>
+          </div>
+        ) : null}
 
         <GlassCard data-gsap="pop" className="p-0" tone="default">
           <div className="overflow-x-auto">
             <div className="min-w-220">
               <div className="grid grid-cols-12 gap-3 border-b border-slate-200/70 bg-white/65 px-4 py-3 text-sm font-semibold text-slate-700">
-                <div className="col-span-4">Email</div>
+                <div className="col-span-1">
+                  <div className="flex items-center">
+                    <input
+                      ref={selectAllRef}
+                      type="checkbox"
+                      checked={allVisibleSelected}
+                      onChange={toggleSelectAllVisible}
+                      className="h-4 w-4 rounded border border-slate-300 bg-white accent-(--edp-blue)"
+                      aria-label="Select all users"
+                    />
+                  </div>
+                </div>
+                <div className="col-span-3">Email</div>
                 <div className="col-span-3">Name</div>
                 <div className="col-span-2">Role</div>
                 <div className="col-span-2">Active</div>
@@ -311,7 +561,14 @@ export default function AdminUsersPage() {
               </div>
 
               {(data?.items ?? []).map((u) => (
-                <UserRow key={u.id} user={u} saving={Boolean(savingIds[u.id])} onSave={savePatch} />
+                <UserRow
+                  key={u.id}
+                  user={u}
+                  selected={selectedUserIds.has(u.id)}
+                  saving={Boolean(savingIds[u.id])}
+                  onSave={savePatch}
+                  onToggleSelected={toggleRowSelected}
+                />
               ))}
 
               {!data?.items?.length ? (
@@ -349,12 +606,16 @@ export default function AdminUsersPage() {
 
 function UserRow({
   user,
+  selected,
   saving,
-  onSave
+  onSave,
+  onToggleSelected
 }: {
   user: UserPublicAdmin;
+  selected: boolean;
   saving: boolean;
   onSave: (userId: string, patch: { role?: UserRole; is_active?: boolean; full_name?: string }) => Promise<void>;
+  onToggleSelected: (userId: string) => void;
 }) {
   const [fullName, setFullName] = React.useState<string>(user.full_name);
   const [role, setRole] = React.useState<UserRole>(user.role);
@@ -370,7 +631,19 @@ function UserRow({
 
   return (
     <div className="grid grid-cols-12 items-center gap-3 border-b border-slate-200/70 px-4 py-3 text-base text-slate-800 transition-colors hover:bg-[rgba(20,65,206,0.04)] last:border-b-0">
-      <div className="col-span-4 truncate">{user.email}</div>
+      <div className="col-span-1">
+        <div className="flex items-center">
+          <input
+            type="checkbox"
+            checked={selected}
+            onChange={() => onToggleSelected(user.id)}
+            className="h-4 w-4 rounded border border-slate-300 bg-white accent-(--edp-blue)"
+            aria-label={`Select user ${user.email}`}
+          />
+        </div>
+      </div>
+
+      <div className="col-span-3 truncate">{user.email}</div>
       <div className="col-span-3">
         <input
           value={fullName}

@@ -93,3 +93,7 @@ class UsersService:
         await self.session.commit()
         await self.session.refresh(user)
         return user
+
+    async def delete_user(self, user: User) -> None:
+        await self.session.delete(user)
+        await self.session.commit()

@@ -1,5 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.middleware.gzip import GZipMiddleware
+from starlette.middleware.trustedhost import TrustedHostMiddleware
 
 from app.core.settings import get_settings
 from app.routers import academics, admin, auth, bootstrap, health, ml, users
@@ -7,10 +9,12 @@ from app.routers import academics, admin, auth, bootstrap, health, ml, users
 
 def create_app() -> FastAPI:
     settings = get_settings()
+    settings.validate_runtime_config()
     app = FastAPI(
         title="EduPredict API",
         version="0.1.0",
         description="EduPredict backend: RBAC + ML prediction + explainability.",
+        debug=settings.app_debug,
     )
 
     @app.get("/", tags=["meta"])
@@ -30,6 +34,9 @@ def create_app() -> FastAPI:
         allow_methods=["*"],
         allow_headers=["*"],
     )
+
+    app.add_middleware(GZipMiddleware, minimum_size=1024)
+    app.add_middleware(TrustedHostMiddleware, allowed_hosts=settings.allowed_hosts)
 
     app.include_router(auth.router)
     app.include_router(users.router)

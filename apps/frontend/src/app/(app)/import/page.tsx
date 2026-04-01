@@ -179,7 +179,7 @@ export default function ImportPage() {
           <p className="mt-2 text-base text-slate-700">
             Upload a CSV with either:
             <span className="font-semibold text-slate-800"> summary columns</span> (attendance_pct, assignments_pct,
-            quizzes_pct, exams_pct, gpa, term) or
+            quizzes_pct, exams_pct, cgpa (column name: gpa), term) or
             <span className="font-semibold text-slate-800"> RUET marks columns</span> (attendance_10, assignments_10,
             ct_20, final_60, credits, grade_point_4, semester/term). In both cases provide
             <span className="font-semibold text-slate-800"> student_user_id</span> or

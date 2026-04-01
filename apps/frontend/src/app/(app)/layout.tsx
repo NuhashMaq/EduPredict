@@ -10,7 +10,7 @@ import { BackgroundBeams, DottedGlowBackground, HoverBorderGradient } from "@/co
 import { SessionProvider, type UserPublic } from "@/components/session/SessionProvider";
 import { BrandLogo } from "@/components/site/BrandLogo";
 import { GlassCard } from "@/components/ui";
-import { apiFetchWithRefresh, logout } from "@/lib/api";
+import { apiFetchWithRefresh, getApiBaseUrl, logout } from "@/lib/api";
 
 const APP_BG =
   "https://images.pexels.com/photos/3861969/pexels-photo-3861969.jpeg?auto=compress&cs=tinysrgb&w=2400";
@@ -78,7 +78,7 @@ export default function AppLayout({
         if (!alive) return;
         // If the service isn't reachable yet, keep the user here and show a friendly screen.
         // If it's an access problem, send them to login.
-        const base = process.env.NEXT_PUBLIC_API_BASE_URL ?? "http://localhost:8000";
+        const base = getApiBaseUrl();
         try {
           // We re-run a tiny unauthenticated request to disambiguate network vs access.
           const res = await fetch(`${base.replace(/\/$/, "")}/health`, { method: "GET" });

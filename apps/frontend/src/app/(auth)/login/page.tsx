@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import * as React from "react";
 import { z } from "zod";
 
-import { loginWithPassword } from "@/lib/api";
+import { apiFetchWithRefresh, loginWithPassword } from "@/lib/api";
 import { HoverBorderGradient, MultiStepLoader } from "@/components/aceternity";
 
 const schema = z.object({
@@ -43,6 +43,8 @@ export default function LoginPage() {
       setSubmitting(true);
       setStep(0);
       await loginWithPassword(parsed.data.email, parsed.data.password);
+      // Validate tokens immediately so users get a clear error if the session can't be established.
+      await apiFetchWithRefresh("/auth/me");
       setStep(1);
       router.replace("/dashboard");
     } catch (err) {

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 from functools import lru_cache
 from pathlib import Path
+from typing import Literal
 
 from pydantic import field_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
@@ -28,6 +29,12 @@ class Settings(BaseSettings):
     allow_admin_bootstrap: bool = False
     admin_bootstrap_token: str = ""
 
+    # Runtime mode and production controls.
+    app_env: Literal["development", "staging", "production"] = "development"
+    app_debug: bool = False
+    app_log_level: Literal["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"] = "INFO"
+    allowed_hosts: list[str] | str = ["localhost", "127.0.0.1"]
+
     # NOTE: pydantic-settings attempts to JSON-parse env values for complex types like list[str].
     # Accept str|list[str] so simple dotenv values like
     #   CORS_ALLOW_ORIGINS=http://localhost:3000,http://localhost:3001
@@ -50,6 +57,27 @@ class Settings(BaseSettings):
             parts = [p.strip() for p in v.split(",")]
             return [p for p in parts if p]
         return v
+
+    @field_validator("allowed_hosts", mode="before")
+    @classmethod
+    def _parse_allowed_hosts(cls, v):
+        if isinstance(v, str):
+            parts = [p.strip() for p in v.split(",")]
+            return [p for p in parts if p]
+        return v
+
+    @property
+    def is_production(self) -> bool:
+        return self.app_env == "production"
+
+    def validate_runtime_config(self) -> None:
+        if self.is_production:
+            if self.jwt_secret == "dev-secret-change-me" or len(self.jwt_secret) < 32:
+                raise ValueError("In production, JWT_SECRET must be set to a strong value (>=32 chars).")
+            if not self.cors_allow_origins:
+                raise ValueError("In production, CORS_ALLOW_ORIGINS must include at least one trusted origin.")
+            if not self.allowed_hosts:
+                raise ValueError("In production, ALLOWED_HOSTS must include at least one host.")
 
 
 @lru_cache

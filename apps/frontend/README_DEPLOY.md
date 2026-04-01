@@ -1,28 +1,30 @@
-# EduPredict Frontend — Cloudflare Pages (Free)
+# EduPredict Frontend Deployment
 
 This frontend is a **Next.js** app.
 
-## Cloudflare Pages setup
+## Recommended: Vercel (best fit for recruiters)
 
-1. Create a new **Pages** project.
-2. Connect it to your GitHub repo.
-3. Set these build settings:
-   - **Root directory:** `apps/frontend`
-   - **Build command:** `npm run build`
-  - **Output directory:** `out`
+1. Create a new Vercel project from your GitHub repo.
+2. Set **Root Directory** to `apps/frontend`.
+3. Keep defaults:
+  - Build command: `npm run build`
+  - Install command: `npm install`
+4. Set environment variable:
+  - `NEXT_PUBLIC_API_BASE_URL` = your deployed backend URL
+5. Redeploy after each backend URL/domain change.
 
-Cloudflare Pages will usually auto-detect Next.js.
-
-This project is configured for **static export** on Pages (`output: "export"`), which avoids uploading large `.next/cache` artifacts that can exceed Cloudflare Pages’ per-file size limit.
+Notes:
+- On Vercel, this app runs with full Next.js runtime (SSR and optimized image pipeline enabled).
+- Production security headers are configured in `next.config.ts`.
 
 ## Environment variables
 
-Set this in Cloudflare Pages → Settings → Environment variables:
+Set this in Vercel → Project Settings → Environment Variables:
 
 - `NEXT_PUBLIC_API_BASE_URL` = your deployed backend URL
-  - Example: `https://<your-space>.hf.space`
+  - Example: `https://your-backend-domain.com`
 
 ## Notes
 
 - The frontend calls the backend at runtime using `NEXT_PUBLIC_API_BASE_URL`.
-- After you deploy the backend, update this variable and redeploy the Pages project.
+- After you deploy the backend, update this variable and redeploy the Vercel project.

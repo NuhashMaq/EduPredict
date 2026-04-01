@@ -91,25 +91,28 @@ This repo includes `docker-compose.yml` to run Postgres locally. To use it:
 
 This project can be deployed end-to-end on free tiers without rewriting the backend:
 
-- **Frontend:** Cloudflare Pages (deploy `apps/frontend`)
-- **Backend:** Hugging Face Spaces (Docker Space; deploy `apps/backend`)
+- **Frontend:** Vercel (deploy `apps/frontend`)
+- **Backend:** Vercel (deploy `apps/backend` as a separate project)
 - **Database:** Managed Postgres (Supabase or Neon free tier)
 
 ### High-level steps
 
 1. Create a Postgres database (Supabase/Neon) and copy its connection string.
-2. Deploy the backend to Hugging Face Spaces.
+2. Deploy the backend to Vercel (separate project, root `apps/backend`).
   - See `apps/backend/README_DEPLOY.md`.
-  - Set `DATABASE_URL`, JWT settings, and `CORS_ALLOW_ORIGINS` in the Space settings.
+  - Set `DATABASE_URL`, JWT settings, `CORS_ALLOW_ORIGINS`, and `ALLOWED_HOSTS`.
   - Run Alembic migrations against the production DB.
-3. Deploy the frontend to Cloudflare Pages.
+3. Deploy the frontend to Vercel.
   - See `apps/frontend/README_DEPLOY.md`.
   - Set `NEXT_PUBLIC_API_BASE_URL` to your deployed backend URL.
+4. Verify runtime checks:
+  - Backend `GET /health` should return OK.
+  - Backend `GET /health/ready` should return ready (DB reachable).
+  - Frontend login/prediction flows should succeed against production backend.
 
 ### Notes
 
-- Cloudflare **Workers** run JavaScript/TypeScript, so the Python FastAPI+ML backend is not deployed on Workers in this setup.
-- If you need Cloudflare-native DB + compute (Workers + D1), that requires a backend rewrite.
+- Use two Vercel projects (frontend and backend) so each app has its own build/runtime config.
 
 ## Architecture (concept)
 

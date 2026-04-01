@@ -15,3 +15,16 @@ class AdminBootstrapRequest(BaseModel):
 class AdminBootstrapResponse(BaseModel):
     created: bool
     role: UserRole
+
+
+class ImportRowError(BaseModel):
+    row: int
+    message: str
+
+
+class ImportStudentsResponse(BaseModel):
+    created: int
+    updated_existing: int = 0
+    skipped_existing: int
+    invalid_rows: int
+    errors: list[ImportRowError] = []

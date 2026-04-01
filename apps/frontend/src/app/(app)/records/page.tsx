@@ -30,6 +30,10 @@ export default function RecordsPage() {
 
   const [loading, setLoading] = React.useState(false);
   const [error, setError] = React.useState<string | null>(null);
+  const [notice, setNotice] = React.useState<string | null>(null);
+
+  const [importing, setImporting] = React.useState(false);
+  const importInputRef = React.useRef<HTMLInputElement | null>(null);
 
   const [records, setRecords] = React.useState<AcademicRecordPublic[]>([]);
   const [students, setStudents] = React.useState<UserPublicAdmin[]>([]);
@@ -115,6 +119,7 @@ export default function RecordsPage() {
     if (!role) return;
 
     setError(null);
+    setNotice(null);
     setLoading(true);
     try {
       if (role === "student") {
@@ -164,6 +169,7 @@ export default function RecordsPage() {
 
   async function createRecord() {
     setError(null);
+    setNotice(null);
 
     if (!canManage(role)) {
       setError("Forbidden");
@@ -297,6 +303,45 @@ export default function RecordsPage() {
     }
   }
 
+  type AcademicImportResponse = {
+    created: number;
+    updated: number;
+    skipped: number;
+    invalid_rows: number;
+    errors?: Array<{ row: number; message: string }>;
+  };
+
+  async function importRecordsCsv(file: File) {
+    if (!role || role === "student") return;
+    setError(null);
+    setNotice(null);
+    setImporting(true);
+    try {
+      const fd = new FormData();
+      fd.append("file", file);
+      // dry_run defaults false server-side; keep simple.
+
+      const res = await apiFetchWithRefresh<AcademicImportResponse>("/academics/import", {
+        method: "POST",
+        body: fd
+      });
+
+      const base = `Import complete: created=${res.created}, updated=${res.updated}, skipped=${res.skipped}, invalid=${res.invalid_rows}`;
+      if (res.errors?.length) {
+        setError(`${base}. First error (row ${res.errors[0].row}): ${res.errors[0].message}`);
+      } else {
+        setNotice(base);
+      }
+
+      await load();
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Failed to import records");
+    } finally {
+      setImporting(false);
+      if (importInputRef.current) importInputRef.current.value = "";
+    }
+  }
+
   return (
     <GsapReveal className="grid gap-6">
       <div data-gsap="pop" className="flex flex-wrap items-start justify-between gap-4">
@@ -308,14 +353,44 @@ export default function RecordsPage() {
               : "Manage student records (create, edit, and—admins—delete)."}
           </p>
         </div>
-        <HoverBorderGradient onClick={load} disabled={loading}>
-          Refresh
-        </HoverBorderGradient>
+        <div className="flex flex-wrap items-center gap-3">
+          {role && role !== "student" ? (
+            <>
+              <input
+                ref={importInputRef}
+                type="file"
+                accept=".csv,text/csv"
+                className="hidden"
+                onChange={(e) => {
+                  const f = e.currentTarget.files?.[0];
+                  if (f) void importRecordsCsv(f);
+                }}
+              />
+              <HoverBorderGradient
+                variant="blue"
+                onClick={() => importInputRef.current?.click()}
+                disabled={loading || importing}
+              >
+                {importing ? "Importing…" : "Import CSV"}
+              </HoverBorderGradient>
+            </>
+          ) : null}
+
+          <HoverBorderGradient onClick={load} disabled={loading}>
+            Refresh
+          </HoverBorderGradient>
+        </div>
       </div>
 
       {error ? (
         <div className="rounded-xl border border-[rgba(235,97,95,0.30)] bg-[rgba(235,97,95,0.12)] p-4 text-base text-(--edp-red)">
           {error}
+        </div>
+      ) : null}
+
+      {notice ? (
+        <div className="rounded-xl border border-emerald-300 bg-emerald-50 p-4 text-base text-emerald-800">
+          {notice}
         </div>
       ) : null}
 
@@ -380,7 +455,7 @@ export default function RecordsPage() {
 
               <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                 <NumberField
-                  label="GPA (0-4)"
+                  label="CGPA (0-4)"
                   value={createForm.gpa}
                   min={0}
                   max={4}
@@ -450,7 +525,7 @@ export default function RecordsPage() {
 
                 <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
                   <NumberField
-                    label="GPA (0-4)"
+                    label="CGPA (0-4)"
                     value={Number(editForm.gpa ?? 0)}
                     min={0}
                     max={4}
@@ -558,7 +633,7 @@ export default function RecordsPage() {
               >
                 {isAdmin ? <div className="col-span-1">Select</div> : null}
                 <div className={isAdmin ? "col-span-3" : "col-span-3"}>Student</div>
-                <div className="col-span-2">GPA</div>
+                <div className="col-span-2">CGPA</div>
                 <div className="col-span-2">Term</div>
                 <div className="col-span-3">Created</div>
                 <div className="col-span-2">Signals</div>
@@ -626,7 +701,7 @@ export default function RecordsPage() {
           <div className="mt-4 overflow-x-auto rounded-2xl bg-white/70 shadow-[0_12px_36px_rgba(20,65,206,0.10)]">
             <div className="min-w-180">
               <div className="grid grid-cols-12 gap-3 border-b border-[rgba(20,65,206,0.16)] bg-[rgba(20,65,206,0.04)] px-4 py-3 text-sm font-semibold text-slate-700">
-                <div className="col-span-2">GPA</div>
+                <div className="col-span-2">CGPA</div>
                 <div className="col-span-3">Term</div>
                 <div className="col-span-4">Created</div>
                 <div className="col-span-3">Signals</div>

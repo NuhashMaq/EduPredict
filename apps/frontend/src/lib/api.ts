@@ -1,6 +1,6 @@
 import { clearTokens, getStoredTokens, storeTokens, type TokenPair } from "@/lib/auth";
 
-function getBaseUrl() {
+export function getApiBaseUrl() {
   const base = process.env.NEXT_PUBLIC_API_BASE_URL;
   if (!base) {
     // Dev convenience: keep the app usable even if .env.local isn't loaded for some reason.
@@ -60,7 +60,7 @@ export async function apiFetch<T>(
   path: string,
   init?: RequestInit & { auth?: boolean }
 ): Promise<T> {
-  const baseUrl = getBaseUrl();
+  const baseUrl = getApiBaseUrl();
   const url = `${baseUrl}${path.startsWith("/") ? path : `/${path}`}`;
 
   const headers = new Headers(init?.headers ?? {});
@@ -89,7 +89,7 @@ export async function apiFetch<T>(
 }
 
 export async function loginWithPassword(email: string, password: string) {
-  const baseUrl = getBaseUrl();
+  const baseUrl = getApiBaseUrl();
   let res: Response;
   try {
     res = await fetch(`${baseUrl}/auth/login`, {
@@ -130,7 +130,7 @@ export async function registerStudent(body: {
 }
 
 export async function refreshTokens(): Promise<TokenPair> {
-  const baseUrl = getBaseUrl();
+  const baseUrl = getApiBaseUrl();
   const existing = getStoredTokens();
   if (!existing?.refresh_token) {
     throw new Error("No refresh token available");

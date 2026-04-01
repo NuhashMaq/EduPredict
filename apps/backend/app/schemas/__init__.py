@@ -1,4 +1,4 @@
-from .admin import AdminBootstrapRequest, AdminBootstrapResponse
+from .admin import AdminBootstrapRequest, AdminBootstrapResponse, ImportRowError, ImportStudentsResponse
 from .academic import AcademicRecordCreate, AcademicRecordList, AcademicRecordPublic, AcademicRecordUpdate
 from .auth import LogoutRequest, RefreshRequest, RegisterRequest, TokenPair
 from .ml import ExplainRequest, ExplainResponse, ModelInfo, PredictionRequest, PredictionResponse

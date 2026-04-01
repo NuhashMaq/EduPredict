@@ -26,7 +26,7 @@ def main() -> int:
         )
     )
     parser.add_argument("--email", default="admin@example.com")
-    parser.add_argument("--password", default="SuperSecure123")
+    parser.add_argument("--password", default="admin@123")
     args = parser.parse_args()
 
     p = db_path()
