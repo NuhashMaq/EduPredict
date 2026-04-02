@@ -7,8 +7,6 @@ from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any
 
-import joblib
-
 from app.core.settings import get_settings
 
 
@@ -50,6 +48,8 @@ def version_dir(version: str) -> Path:
 
 
 def save_artifact(*, version: str, artifact: Any, metadata: ModelMetadata) -> Path:
+    import joblib
+
     d = version_dir(version)
     ensure_dir(d)
 
@@ -112,6 +112,8 @@ def list_versions(*, limit: int = 200) -> list[str]:
 
 
 def load_latest_artifact() -> Any:
+    import joblib
+
     v = latest_version()
     if not v:
         raise FileNotFoundError("No model available in registry")
