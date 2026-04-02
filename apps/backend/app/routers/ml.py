@@ -6,12 +6,9 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
-import pandas as pd
-
 from app.core.db import get_db_session
 from app.deps.auth import get_current_user, require_roles
 from app.ml.humanize import human_label, human_unit
-from app.ml.inference import df_from_features, df_from_record, explain_from_raw_df, predict_proba_from_raw_df
 from app.ml.registry import load_metadata
 from app.models.academic_record import AcademicRecord
 from app.models.user import User, UserRole
@@ -29,6 +26,16 @@ from app.schemas.ml import (
 )
 
 router = APIRouter(prefix="/ml", tags=["ml"])
+
+
+def _ml_dependency_unavailable(exc: ModuleNotFoundError) -> HTTPException:
+    return HTTPException(
+        status_code=status.HTTP_503_SERVICE_UNAVAILABLE,
+        detail=(
+            "ML dependencies are not available in this deployment "
+            f"(missing module: {exc.name}). Install backend ML packages and redeploy."
+        ),
+    )
 
 
 async def _get_record(
@@ -68,6 +75,11 @@ async def predict(
     session: AsyncSession = Depends(get_db_session),
     user: User = Depends(get_current_user),
 ) -> PredictionResponse:
+    try:
+        from app.ml.inference import df_from_features, df_from_record, predict_proba_from_raw_df
+    except ModuleNotFoundError as exc:
+        raise _ml_dependency_unavailable(exc)
+
     df_raw = None
 
     if body.features is not None:
@@ -121,6 +133,11 @@ async def explain(
     session: AsyncSession = Depends(get_db_session),
     user: User = Depends(get_current_user),
 ) -> ExplainResponse:
+    try:
+        from app.ml.inference import df_from_features, df_from_record, explain_from_raw_df
+    except ModuleNotFoundError as exc:
+        raise _ml_dependency_unavailable(exc)
+
     df_raw = None
 
     if body.features is not None:
@@ -281,12 +298,13 @@ async def train_model(
             detail=f"Not enough academic records to train (have {len(rows)}, need {body.min_rows})",
         )
 
-    df = pd.DataFrame(
-        rows,
-        columns=["attendance_pct", "assignments_pct", "quizzes_pct", "exams_pct", "gpa"],
-    )
+    try:
+        import pandas as pd
+        from app.ml.train import train_from_dataframe
+    except ModuleNotFoundError as exc:
+        raise _ml_dependency_unavailable(exc)
 
-    from app.ml.train import train_from_dataframe
+    df = pd.DataFrame(rows, columns=["attendance_pct", "assignments_pct", "quizzes_pct", "exams_pct", "gpa"])
 
     version, meta = train_from_dataframe(df, notes=body.notes)
 
