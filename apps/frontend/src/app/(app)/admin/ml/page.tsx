@@ -20,32 +20,38 @@ function ModelInfoPanel({ title, model }: { title: string; model: ModelInfo }) {
 
   return (
     <GlassCard className="p-6 sm:p-7" tone="default">
-      <div className="flex flex-wrap items-start justify-between gap-3">
-        <div>
-          <div className="text-base font-semibold text-slate-900">{title}</div>
-          <div className="mt-1 text-sm text-slate-600">Version + metrics</div>
-        </div>
-        <div className="flex flex-wrap items-center gap-2 text-sm text-slate-600">
-          <span className="rounded-full border border-slate-200/70 bg-white/70 px-3 py-1">
-            Version: {model.model_version}
+      <div className="rounded-2xl border border-[rgba(20,65,206,0.16)] bg-[linear-gradient(135deg,rgba(20,65,206,0.10),rgba(56,189,248,0.14))] p-4 sm:p-5">
+        <div className="text-sm font-semibold tracking-[0.06em] text-slate-700">{title.toUpperCase()}</div>
+        <div className="mt-2 flex flex-wrap items-center gap-2 text-sm text-slate-700">
+          <span className="rounded-full border border-[rgba(15,23,42,0.14)] bg-white/85 px-3 py-1 font-semibold text-slate-900">
+            {model.model_version}
           </span>
-          <span className="rounded-full border border-slate-200/70 bg-white/70 px-3 py-1">
-            Created: {fmtDateTime(String(model.created_at))}
+          <span className="rounded-full border border-[rgba(15,23,42,0.14)] bg-white/85 px-3 py-1">
+            {fmtDateTime(String(model.created_at))}
           </span>
         </div>
       </div>
 
-      {model.notes ? <div className="mt-3 text-sm text-slate-600">Notes: {model.notes}</div> : null}
+      {model.notes ? (
+        <div className="mt-4 rounded-2xl border border-[rgba(20,65,206,0.14)] bg-white/70 p-4 text-base text-slate-700">
+          <span className="font-semibold text-slate-900">Notes:</span> {model.notes}
+        </div>
+      ) : null}
 
       <div className="mt-4 grid gap-4 md:grid-cols-2">
         <div className="rounded-2xl border border-slate-200/70 bg-white/55 p-4">
           <div className="text-sm font-semibold text-slate-700">Metrics</div>
           {metricsEntries.length ? (
-            <div className="mt-3 grid gap-2 text-base text-slate-800">
+            <div className="mt-3 grid gap-3 sm:grid-cols-2">
               {metricsEntries.map(([k, v]) => (
-                <div key={k} className="flex items-center justify-between gap-4">
-                  <div className="text-slate-600">{k}</div>
-                  <div className="font-semibold text-slate-900">{Number(v).toFixed(4)}</div>
+                <div
+                  key={k}
+                  className="rounded-2xl border border-[rgba(15,23,42,0.10)] bg-white/80 p-4 shadow-[0_12px_30px_rgba(15,23,42,0.08)]"
+                >
+                  <div className="text-xs font-semibold uppercase tracking-[0.08em] text-slate-500">
+                    {k.replace(/_/g, " ")}
+                  </div>
+                  <div className="mt-2 text-2xl font-semibold text-slate-900">{Number(v).toFixed(4)}</div>
                 </div>
               ))}
             </div>
@@ -189,7 +195,7 @@ export default function AdminMlPage() {
         ) : null}
 
         <GlassCard data-gsap="pop" className="p-6 sm:p-7" tone="cyan">
-          <div className="text-base font-semibold text-slate-900">Run an update</div>
+          <div className="text-base font-semibold tracking-[0.04em] text-slate-900">Run an update</div>
           <div className="mt-1 text-sm text-slate-600">
             This runs right away; for large datasets you’ll want a background job later.
           </div>
@@ -230,7 +236,7 @@ export default function AdminMlPage() {
             </div>
           </div>
 
-          <div className="mt-4 flex flex-wrap items-center gap-3">
+          <div className="mt-5 flex flex-wrap items-center gap-3">
             <HoverBorderGradient
               disabled={loading}
               onClick={train}
@@ -255,7 +261,7 @@ export default function AdminMlPage() {
         <GlassCard data-gsap="pop" className="p-6 sm:p-7" tone="default">
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div>
-              <div className="text-base font-semibold text-slate-900">Versions</div>
+              <div className="text-base font-semibold tracking-[0.04em] text-slate-900">Versions</div>
               <div className="mt-1 text-sm text-slate-600">Make a previous version the active one.</div>
             </div>
             <div className="text-sm text-slate-600">

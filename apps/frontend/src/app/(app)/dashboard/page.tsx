@@ -575,27 +575,37 @@ export default function DashboardPage() {
               </div>
 
               {modelInfo ? (
-                <div className="mt-4 grid gap-3">
-                  <div className="flex flex-wrap items-center gap-2 text-base text-slate-700">
-                    <span className="rounded-full border border-[rgba(20,65,206,0.18)] bg-white/70 px-3 py-1">
-                      Version: {modelInfo.model_version}
-                    </span>
-                    <span className="rounded-full border border-[rgba(20,65,206,0.18)] bg-white/70 px-3 py-1">
-                      Created: {fmtDateTime(String(modelInfo.created_at))}
-                    </span>
+                <div className="mt-5 grid gap-4">
+                  <div className="grid gap-3 rounded-2xl border border-[rgba(20,65,206,0.16)] bg-[linear-gradient(135deg,rgba(20,65,206,0.10),rgba(56,189,248,0.14))] p-4 sm:p-5">
+                    <div className="text-sm font-semibold tracking-[0.06em] text-slate-700">ACTIVE MODEL</div>
+                    <div className="flex flex-wrap items-center gap-2 text-base text-slate-800">
+                      <span className="rounded-full border border-[rgba(15,23,42,0.14)] bg-white/85 px-3 py-1 font-semibold">
+                        {modelInfo.model_version}
+                      </span>
+                      <span className="rounded-full border border-[rgba(15,23,42,0.14)] bg-white/85 px-3 py-1">
+                        {fmtDateTime(String(modelInfo.created_at))}
+                      </span>
+                    </div>
                   </div>
 
-                  <div className="grid gap-2 text-base text-slate-700">
+                  <div className="grid gap-3 sm:grid-cols-3">
                     {Object.entries(modelInfo.metrics ?? {}).map(([k, v]) => (
-                      <div key={k} className="flex items-center justify-between gap-4">
-                        <div className="text-slate-700">{k}</div>
-                        <div className="font-semibold text-slate-900">{v.toFixed(4)}</div>
+                      <div
+                        key={k}
+                        className="rounded-2xl border border-[rgba(15,23,42,0.10)] bg-white/80 p-4 shadow-[0_14px_34px_rgba(15,23,42,0.08)]"
+                      >
+                        <div className="text-xs font-semibold uppercase tracking-[0.08em] text-slate-500">
+                          {k.replace(/_/g, " ")}
+                        </div>
+                        <div className="mt-2 text-2xl font-semibold text-slate-900">{v.toFixed(4)}</div>
                       </div>
                     ))}
                   </div>
 
                   {modelInfo.notes ? (
-                    <div className="text-base text-slate-700">Notes: {modelInfo.notes}</div>
+                    <div className="rounded-2xl border border-[rgba(20,65,206,0.14)] bg-white/70 p-4 text-base text-slate-700">
+                      <span className="font-semibold text-slate-900">Notes:</span> {modelInfo.notes}
+                    </div>
                   ) : null}
                 </div>
               ) : (
