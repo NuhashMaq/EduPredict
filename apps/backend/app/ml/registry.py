@@ -39,14 +39,26 @@ def _configured_registry_path(default: str = "ml_registry") -> Path:
     return Path(os.getenv("MODEL_REGISTRY_PATH", settings.model_registry_path or default))
 
 
+def _is_serverless_read_only_runtime() -> bool:
+    # Vercel/Lambda style runtimes expose read-only code under /var/task.
+    return bool(
+        os.getenv("VERCEL")
+        or os.getenv("VERCEL_URL")
+        or os.getenv("AWS_LAMBDA_FUNCTION_NAME")
+        or Path("/var/task").exists()
+    )
+
+
 def registry_write_root(default: str = "ml_registry") -> Path:
     p = _configured_registry_path(default)
+    if _is_serverless_read_only_runtime():
+        # Force writable root for serverless runtimes.
+        if p.is_absolute() and str(p).startswith("/tmp"):
+            return p.resolve()
+        return (Path("/tmp") / p.name).resolve()
+
     if not p.is_absolute():
-        # Vercel serverless filesystem is read-only under /var/task; /tmp is writable.
-        if os.getenv("VERCEL_URL"):
-            p = Path("/tmp") / p
-        else:
-            p = _backend_root() / p
+        p = _backend_root() / p
     return p.resolve()
 
 
