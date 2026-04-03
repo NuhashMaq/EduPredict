@@ -56,6 +56,21 @@ export default function DashboardPage() {
     return records.find((r) => r.id === selectedRecordId) ?? null;
   }, [records, selectedRecordId]);
 
+  const hasTeacherAdminData =
+    records.length > 0 ||
+    students.length > 0 ||
+    selectedPrediction !== null ||
+    selectedExplain !== null ||
+    modelInfo !== null;
+
+  const hasStudentData =
+    studentRecords.length > 0 || studentPrediction !== null || studentExplain !== null;
+
+  const showGlobalError =
+    !!error &&
+    !((role === "teacher" || role === "admin") && hasTeacherAdminData) &&
+    !(role === "student" && hasStudentData);
+
   async function loadStudentPanels() {
     // Student: load their own records + model outputs based on latest record.
     const recs = await apiFetchWithRefresh<AcademicRecordList>("/academics/me?limit=50&offset=0");
@@ -384,7 +399,7 @@ export default function DashboardPage() {
         </div>
       </div>
 
-      {error ? (
+      {showGlobalError ? (
         <div className="rounded-2xl border border-[rgba(235,97,95,0.30)] bg-[rgba(235,97,95,0.12)] p-4 text-base text-(--edp-red)">
           {error}
         </div>
