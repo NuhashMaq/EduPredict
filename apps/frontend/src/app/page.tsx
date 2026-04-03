@@ -2,8 +2,6 @@ import Link from "next/link";
 import Image from "next/image";
 
 import {
-  BackgroundBeams,
-  DottedGlowBackground,
   HoverBorderGradient,
   LampSectionHeader,
   CardSpotlight
@@ -11,7 +9,6 @@ import {
 
 import { RandomReveal } from "@/components/motion/RandomReveal";
 import { LandingHeader } from "@/components/site/LandingHeader";
-import { LandingMotionBackground } from "@/components/site/LandingMotionBackground";
 import { ShowcaseSection } from "@/components/site/ShowcaseSection";
 
 const HERO_BG =
@@ -39,7 +36,7 @@ export default function HomePage() {
   const heroCtaRounded = "rounded-full";
 
   return (
-    <main className="relative flex min-h-full flex-col overflow-hidden text-slate-900">
+    <main className="relative flex min-h-full flex-col overflow-hidden bg-slate-50 text-slate-900">
       <div className="pointer-events-none absolute inset-0">
         <Image
           src={HERO_BG}
@@ -50,17 +47,8 @@ export default function HomePage() {
           sizes="100vw"
           className="object-cover opacity-16 brightness-110 saturate-110"
         />
-        <div aria-hidden className="absolute inset-0 bg-[rgba(250,222,221,0.88)]" />
+        <div aria-hidden className="absolute inset-0 bg-[rgba(248,250,252,0.92)]" />
       </div>
-
-      {/* Animated neon background layers */}
-      <BackgroundBeams className="opacity-85" />
-      <DottedGlowBackground className="opacity-55" />
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(900px_420px_at_20%_18%,rgba(20,65,206,0.12),transparent_60%),radial-gradient(900px_420px_at_78%_22%,rgba(239,127,96,0.14),transparent_60%),radial-gradient(1100px_560px_at_55%_88%,rgba(235,97,95,0.10),transparent_62%)]"
-      />
-      <LandingMotionBackground />
 
       <LandingHeader />
 

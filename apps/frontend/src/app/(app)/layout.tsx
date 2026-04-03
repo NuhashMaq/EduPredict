@@ -2,18 +2,14 @@
 
 import type { Route } from "next";
 import Link from "next/link";
-import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import * as React from "react";
 
-import { BackgroundBeams, DottedGlowBackground, HoverBorderGradient } from "@/components/aceternity";
+import { HoverBorderGradient } from "@/components/aceternity";
 import { SessionProvider, type UserPublic } from "@/components/session/SessionProvider";
 import { BrandLogo } from "@/components/site/BrandLogo";
 import { GlassCard } from "@/components/ui";
 import { apiFetchWithRefresh, getApiBaseUrl, logout } from "@/lib/api";
-
-const APP_BG =
-  "https://images.pexels.com/photos/3861969/pexels-photo-3861969.jpeg?auto=compress&cs=tinysrgb&w=2400";
 
 export default function AppLayout({
   children
@@ -102,25 +98,7 @@ export default function AppLayout({
   }, [router, pathname]);
 
   return (
-    <div className="relative min-h-screen overflow-hidden text-slate-900">
-      <div className="pointer-events-none absolute inset-0">
-        <Image
-          src={APP_BG}
-          alt=""
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover opacity-15"
-        />
-        <div aria-hidden className="absolute inset-0 bg-[rgba(250,222,221,0.85)]" />
-      </div>
-
-      <BackgroundBeams className="opacity-70" />
-      <DottedGlowBackground className="opacity-40" />
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(900px_420px_at_20%_18%,rgba(20,65,206,0.12),transparent_60%),radial-gradient(900px_420px_at_78%_22%,rgba(239,127,96,0.14),transparent_60%),radial-gradient(1100px_560px_at_55%_88%,rgba(235,97,95,0.10),transparent_62%)]"
-      />
+    <div className="relative min-h-screen overflow-hidden bg-slate-50 text-slate-900">
 
       <SessionProvider value={{ me, loading }}>
         <div className="relative mx-auto w-full max-w-screen-2xl px-3 pb-16 pt-8 sm:px-6">

@@ -1,35 +1,11 @@
-import Image from "next/image";
-
-import { BackgroundBeams, DottedGlowBackground, LampSectionHeader } from "@/components/aceternity";
+import { LampSectionHeader } from "@/components/aceternity";
 import { BrandLogo } from "@/components/site/BrandLogo";
-
-const AUTH_BG =
-  "https://images.pexels.com/photos/5905484/pexels-photo-5905484.jpeg?auto=compress&cs=tinysrgb&w=2400";
 
 export default function AuthLayout({
   children
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <main className="relative min-h-screen overflow-hidden text-slate-900">
-      <div className="pointer-events-none absolute inset-0">
-        <Image
-          src={AUTH_BG}
-          alt=""
-          fill
-          priority
-          sizes="100vw"
-          unoptimized
-          className="object-cover opacity-18 brightness-110 saturate-110"
-        />
-        <div aria-hidden className="absolute inset-0 bg-[rgba(250,222,221,0.88)]" />
-      </div>
-
-      <BackgroundBeams className="opacity-75" />
-      <DottedGlowBackground className="opacity-45" />
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 bg-[radial-gradient(900px_420px_at_18%_20%,rgba(20,65,206,0.12),transparent_60%),radial-gradient(900px_420px_at_82%_24%,rgba(239,127,96,0.14),transparent_60%),radial-gradient(1100px_560px_at_55%_88%,rgba(235,97,95,0.10),transparent_62%)]"
-      />
+    <main className="relative min-h-screen overflow-hidden bg-slate-50 text-slate-900">
 
       <div className="relative mx-auto w-full max-w-screen-2xl px-3 pb-16 pt-8 sm:px-6">
         <header className="flex flex-wrap items-center justify-between gap-3">
