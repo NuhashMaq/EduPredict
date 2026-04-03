@@ -23,7 +23,13 @@ build/
 
 # Local runtime artifacts (don’t commit)
 *.db
-apps/backend/ml_registry/
+apps/backend/ml_registry/*
+!apps/backend/ml_registry/LATEST
+!apps/backend/ml_registry/models/
+apps/backend/ml_registry/models/*
+!apps/backend/ml_registry/models/20260402_103501_676264Z/
+!apps/backend/ml_registry/models/20260402_103501_676264Z/metadata.json
+!apps/backend/ml_registry/models/20260402_103501_676264Z/model.joblib
 
 # Node
 node_modules/
