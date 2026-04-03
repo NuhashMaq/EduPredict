@@ -31,10 +31,7 @@ The system combines:
 
 ## Live Project URLs
 
-- Frontend URL (Vercel): https://edupredictfrontend.vercel.app
-- Backend API (Vercel): https://edupredict-seven.vercel.app
-- API Docs: https://edupredict-seven.vercel.app/docs
-- API Health: https://edupredict-seven.vercel.app/health
+- Live URL (Vercel): https://edupredictfrontend.vercel.app
 
 ## Color Swatches
 
