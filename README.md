@@ -36,6 +36,32 @@ The system combines:
 - API Docs: https://edupredict-seven.vercel.app/docs
 - API Health: https://edupredict-seven.vercel.app/health
 
+## Color Swatches
+
+- ![#f03c15](https://placehold.co/15x15/f03c15/f03c15.png) `#f03c15` Critical / Alert Red
+- ![#c5f015](https://placehold.co/15x15/c5f015/c5f015.png) `#c5f015` Success / Positive Green
+- ![#1589F0](https://placehold.co/15x15/1589F0/1589F0.png) `#1589F0` Primary / Info Blue
+- ![#0ea5a4](https://placehold.co/15x15/0ea5a4/0ea5a4.png) `#0ea5a4` API / Backend Teal
+- ![#f59e0b](https://placehold.co/15x15/f59e0b/f59e0b.png) `#f59e0b` ML / Analytics Amber
+
+## Markdown Color Toolkit
+
+| Method | Best For | Syntax Example |
+|---|---|---|
+| Placeholder Images | Color swatches, list bullets, status indicators | `![#hex](https://placehold.co/15x15/hex/hex.png)` |
+| Diff Code Block | Colored text lines (red, green, orange) | ` ```diff\n- Red\n+ Green\n! Orange\n``` ` |
+| LaTeX Math | Inline colored text (limited support) | `$${\\color{red}Text}$$` |
+| HTML span | Direct text styling (renderer-dependent) | `<span style="color:red">Red</span>` |
+
+Example diff-style color output:
+
+```diff
+- Critical path failure
++ Healthy deployment state
+! Action required before production release
+```
+
+
 ## Key Features
 
 - Role-based experience for Admin, Teacher, and Student
@@ -132,6 +158,9 @@ npm --prefix apps/frontend run dev
 Set frontend environment value:
 
 - NEXT_PUBLIC_API_BASE_URL=http://127.0.0.1:8000
+
+
+
 
 <p align="center">
   Built with precision for academic analytics, system reliability, and explainable AI workflows.
