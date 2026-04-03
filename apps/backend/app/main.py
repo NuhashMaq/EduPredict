@@ -1,3 +1,5 @@
+import os
+
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.middleware.gzip import GZipMiddleware
@@ -10,6 +12,16 @@ from app.routers import academics, admin, auth, bootstrap, health, ml, users
 def create_app() -> FastAPI:
     settings = get_settings()
     settings.validate_runtime_config()
+
+    allowed_hosts = list(settings.allowed_hosts)
+    # On Vercel, preview deployments and health probes may hit *.vercel.app hosts.
+    # Include them to avoid noisy 400 "Invalid host header" responses.
+    vercel_url = os.getenv("VERCEL_URL", "").strip()
+    if vercel_url:
+        allowed_hosts.extend([vercel_url, "*.vercel.app"])
+    # Preserve order while removing duplicates.
+    allowed_hosts = list(dict.fromkeys(allowed_hosts))
+
     app = FastAPI(
         title="EduPredict API",
         version="0.1.0",
@@ -36,7 +48,7 @@ def create_app() -> FastAPI:
     )
 
     app.add_middleware(GZipMiddleware, minimum_size=1024)
-    app.add_middleware(TrustedHostMiddleware, allowed_hosts=settings.allowed_hosts)
+    app.add_middleware(TrustedHostMiddleware, allowed_hosts=allowed_hosts)
 
     app.include_router(auth.router)
     app.include_router(users.router)

@@ -31,11 +31,10 @@ The system combines:
 
 ## Live Project URLs
 
+- Frontend URL (Vercel): https://edupredictfrontend.vercel.app
 - Backend API (Vercel): https://edupredict-seven.vercel.app
 - API Docs: https://edupredict-seven.vercel.app/docs
 - API Health: https://edupredict-seven.vercel.app/health
-
-If your frontend is hosted on a separate Vercel URL, add it here once finalized.
 
 ## Key Features
 
@@ -133,23 +132,6 @@ npm --prefix apps/frontend run dev
 Set frontend environment value:
 
 - NEXT_PUBLIC_API_BASE_URL=http://127.0.0.1:8000
-
-## Deployment Blueprint (Vercel)
-
-1. Deploy backend project with root directory apps/backend.
-2. Configure backend environment variables (DATABASE_URL, JWT_SECRET, JWT_ISSUER, JWT_AUDIENCE, CORS_ALLOW_ORIGINS, ALLOWED_HOSTS).
-3. Apply Alembic migrations against production DB.
-4. Deploy frontend project with root directory apps/frontend.
-5. Set NEXT_PUBLIC_API_BASE_URL to your backend Vercel URL.
-6. Validate /health, /health/ready, login flow, import flow, and model training flow.
-
-## Professional Notes
-
-- The README uses live badges and SVG animation to provide dynamic project status.
-- Mermaid diagrams render architecture, flow, and lifecycle directly in Markdown.
-- The deployment model is intentionally split for clean scaling and isolated runtime tuning.
-
----
 
 <p align="center">
   Built with precision for academic analytics, system reliability, and explainable AI workflows.
