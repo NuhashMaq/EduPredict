@@ -1,0 +1,18 @@
+{
+  "version": "20260403_063236_721063Z",
+  "created_at": "20260403_063236_721063Z",
+  "metrics": {
+    "accuracy": 0.8194444444444444,
+    "f1": 0.8311688311688312,
+    "roc_auc": 0.9238539238539238
+  },
+  "feature_names": [
+    "attendance_pct",
+    "assignments_pct",
+    "quizzes_pct",
+    "exams_pct",
+    "gpa",
+    "grade_ordinal"
+  ],
+  "notes": "Serverless-safe logistic baseline (no LightGBM runtime dependency)."
+}

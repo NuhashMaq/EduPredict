@@ -30,6 +30,9 @@ apps/backend/ml_registry/models/*
 !apps/backend/ml_registry/models/20260402_103501_676264Z/
 !apps/backend/ml_registry/models/20260402_103501_676264Z/metadata.json
 !apps/backend/ml_registry/models/20260402_103501_676264Z/model.joblib
+!apps/backend/ml_registry/models/20260403_063236_721063Z/
+!apps/backend/ml_registry/models/20260403_063236_721063Z/metadata.json
+!apps/backend/ml_registry/models/20260403_063236_721063Z/model.joblib
 
 # Node
 node_modules/

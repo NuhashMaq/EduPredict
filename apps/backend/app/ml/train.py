@@ -4,7 +4,6 @@ from dataclasses import dataclass
 
 import numpy as np
 import pandas as pd
-from lightgbm import LGBMClassifier
 from sklearn.linear_model import LogisticRegression
 from sklearn.model_selection import train_test_split
 from sklearn.pipeline import Pipeline
@@ -24,11 +23,6 @@ class TrainConfig:
 
     # Logistic regression
     lr_c: float = 1.0
-
-    # LightGBM
-    lgbm_num_leaves: int = 31
-    lgbm_learning_rate: float = 0.05
-    lgbm_n_estimators: int = 300
 
 
 def train_from_dataframe(
@@ -65,17 +59,8 @@ def train_from_dataframe(
         ]
     )
 
-    lgbm = LGBMClassifier(
-        num_leaves=train_cfg.lgbm_num_leaves,
-        learning_rate=train_cfg.lgbm_learning_rate,
-        n_estimators=train_cfg.lgbm_n_estimators,
-        random_state=train_cfg.random_state,
-    )
-
     lr.fit(x_train, y_train)
-    lgbm.fit(x_train, y_train)
-
-    artifact = EnsembleArtifact(logistic=lr, lgbm=lgbm, feature_names=feature_names())
+    artifact = EnsembleArtifact(logistic=lr, lgbm=None, feature_names=feature_names())
 
     proba = artifact.predict_proba(x_test)
     metrics = evaluate_binary(y_test, proba)
